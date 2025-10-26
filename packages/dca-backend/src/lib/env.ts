@@ -39,5 +39,25 @@ export const env = createEnv({
     SENTRY_PROJECT: z.string().optional(),
     VINCENT_APP_ID: z.coerce.number(),
     VINCENT_DELEGATEE_PRIVATE_KEY: z.string(),
+    
+    // EmailPay Configuration (optional)
+    SEPOLIA_RPC: z.string().url().optional(),
+    CHAIN_ID: z.coerce.number().default(11155111),
+    PYUSD_ADDRESS: z.string().regex(/^0x[a-fA-F0-9]{40}$/).optional(),
+    LIT_NETWORK: z.enum(['datil-dev', 'datil', 'habanero', 'manzano']).default('datil'),
+    GMAIL_CLIENT_ID: z.string().optional(),
+    GMAIL_CLIENT_SECRET: z.string().optional(),
+    GMAIL_REFRESH_TOKEN: z.string().optional(),
+    GMAIL_USER: z.string().email().optional(),
+    GMAIL_POLL_QUERY: z.string().default('in:inbox newer_than:1d'),
+    MAX_TX_AMOUNT: z.coerce.number().default(100),
+    DAILY_TX_CAP: z.coerce.number().default(500),
+    TX_EXPIRY_MINUTES: z.coerce.number().default(30),
+    HOT_WALLET_PRIVATE_KEY: z.string().regex(/^0x[a-fA-F0-9]{64}$/).optional(),
+    
+    // Stytch OTP Configuration (for official Lit Protocol OTP flow)
+    STYTCH_PROJECT_ID: z.string().optional(),
+    STYTCH_SECRET: z.string().optional(),
+    LIT_RELAY_API_KEY: z.string().optional(),
   },
 });

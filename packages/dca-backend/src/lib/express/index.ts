@@ -19,6 +19,10 @@ import { userKey, VincentAuthenticatedRequest } from './types';
 import { env } from '../env';
 import { serviceLogger } from '../logger';
 
+// EmailPay routes
+import emailpayWalletsRoutes from './emailpay-wallets';
+import emailpayTransactionsRoutes from './emailpay-transactions';
+
 const { ALLOWED_AUDIENCE, CORS_ALLOWED_DOMAIN, IS_DEVELOPMENT, VINCENT_APP_ID } = env;
 
 const { handler, middleware } = createVincentUserMiddleware({
@@ -85,5 +89,9 @@ export const registerRoutes = (app: Express) => {
     handler(handleDeleteScheduleRoute)
   );
 
-  serviceLogger.info(`Routes registered`);
+  // EmailPay routes (no auth required)
+  app.use('/emailpay/wallets', emailpayWalletsRoutes);
+  app.use('/emailpay/transactions', emailpayTransactionsRoutes);
+
+  serviceLogger.info(`Routes registered (including EmailPay)`);
 };

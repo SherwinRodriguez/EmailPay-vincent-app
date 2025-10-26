@@ -1,8 +1,16 @@
-# Vincent Starter App
+# Vincent Starter App + EmailPay Integration
 
-A monorepo that powers the _Vincent DCA_ demo application.
+A monorepo that powers the _Vincent DCA_ demo application and the _EmailPay_ email-native PYUSD wallet system.
 
-This project demonstrates how to schedule and execute recurring DCA (Dollar-Cost Averaging) swaps on behalf of end-users using a Vincent App and delegated agent wallets.
+## Projects
+
+### Vincent DCA
+
+Demonstrates how to schedule and execute recurring DCA (Dollar-Cost Averaging) swaps on behalf of end-users using a Vincent App and delegated agent wallets.
+
+### EmailPay
+
+An email-native PYUSD wallet system that enables users to manage PKP (Programmable Key Pair) wallets and send payments via email commands. Built on Lit Protocol SDK v7.3.0 with proper PKP signing implementation.
 
 ## Prerequisites
 
@@ -13,23 +21,20 @@ This project demonstrates how to schedule and execute recurring DCA (Dollar-Cost
 
 ## Monorepo Structure
 
-This codebase is composed of three main parts:
+This codebase is composed of four main parts:
 
-- Frontend: React app where users can create, edit, and delete DCA tasks.
-- Database: MongoDB to persist DCA tasks.
-- Backend (Node.js):
-  - Express.js API server used by the frontend
-  - Agenda-based job scheduler that runs DCA jobs
-  - Integration with a Vincent App to execute swaps on behalf of users
-    - Vincent ERC20 Approval ability: authorizes Uniswap to spend user tokens
-    - Vincent Uniswap Swap ability: executes the actual token swaps
+- **Frontend (DCA)**: React app where users can create, edit, and delete DCA tasks.
+- **Backend (DCA)**: Express.js API server and Agenda-based job scheduler for DCA swaps.
+- **Backend (EmailPay)**: Email-native wallet system with Gmail integration, PKP signing, and transaction processing.
+- **Database**: MongoDB to persist DCA tasks, wallet data, and transactions.
 
 ## Packages
 
-| Package                                         | Purpose                                                                          |
-| ----------------------------------------------- | -------------------------------------------------------------------------------- |
-| [dca-frontend](packages/dca-frontend/README.md) | Frontend for end-users to define DCA tasks to be run on a schedule               |
-| [dca-backend](packages/dca-backend/README.md)   | Backend REST API and worker instance using NodeJS; deployed to Heroku currently. |
+| Package                                                 | Purpose                                                                           |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [dca-frontend](packages/dca-frontend/README.md)         | Frontend for end-users to define DCA tasks to be run on a schedule                |
+| [dca-backend](packages/dca-backend/README.md)           | Backend REST API and worker instance using NodeJS; deployed to Heroku currently.  |
+| [emailpay-backend](packages/emailpay-backend/README.md) | Email-native PYUSD wallet with PKP signing, Gmail integration, and job scheduling |
 
 ## Vincent App
 
@@ -55,7 +60,23 @@ To run this code and sign on behalf of your delegators, create your own Vincent 
 
 ## Quick Start
 
-Install dependencies and build the packages (works for both local and production setups):
+### EmailPay Setup (Recommended)
+
+Use the automated setup script:
+
+```zsh
+./setup-emailpay.sh
+```
+
+Then follow the on-screen instructions to:
+
+1. Start MongoDB
+2. Configure environment variables
+3. Run the EmailPay backend
+
+### Manual Setup
+
+Install dependencies and build the packages:
 
 ```zsh
 pnpm install && pnpm build
@@ -104,7 +125,48 @@ pnpm start
   - Install specific versions of abilities in your app to avoid version conflicts.
 - Users can revoke or update their connection at any time; handle revocations and version changes gracefully.
 - Always call prepare and precheck functions for abilities to avoid preventable errors.
-- Users’ agent wallets send their own transactions. Ensure they have sufficient funds for gas, unless you plan to sponsor it.
+- Users' agent wallets send their own transactions. Ensure they have sufficient funds for gas, unless you plan to sponsor it.
+
+## Additional Documentation
+
+- **[EmailPay Integration Guide](EMAILPAY_INTEGRATION.md)** - Complete guide for EmailPay setup and PKP signing
+- **[EmailPay Backend README](packages/emailpay-backend/README.md)** - EmailPay backend documentation
+- **[DCA Backend README](packages/dca-backend/README.md)** - Vincent DCA backend documentation
+- **[DCA Frontend README](packages/dca-frontend/README.md)** - Frontend documentation
+
+## EmailPay Features
+
+- **Email-Native Wallets**: Create PKP wallets via email
+- **PKP Transaction Signing**: Lit Protocol SDK v7.3.0 with proper session signatures
+- **Gmail Integration**: Automatic email polling and command parsing
+- **Transaction Processing**: Async job queue for PYUSD transfers
+- **OTP Verification**: Secure wallet verification flow
+- **Email Commands**: SEND, BALANCE, VERIFY via email
+
+### Email Commands
+
+Send emails to your configured Gmail address:
+
+**Send Payment:**
+
+```
+Subject: Send Payment
+Body: SEND 10 PYUSD TO recipient@example.com
+```
+
+**Check Balance:**
+
+```
+Subject: Check Balance
+Body: BALANCE
+```
+
+**Verify Wallet:**
+
+```
+Subject: Verify Wallet
+Body: VERIFY 123456
+```
 
 ## Disclaimers
 
